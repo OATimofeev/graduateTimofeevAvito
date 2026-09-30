@@ -27,6 +27,7 @@ import ru.skypro.homework.api.dto.Ads;
 import ru.skypro.homework.api.dto.CreateOrUpdateAd;
 import ru.skypro.homework.api.dto.ExtendedAd;
 import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.StoredImage;
 
 import javax.validation.Valid;
 
@@ -80,6 +81,19 @@ public class AdController {
         return ResponseEntity.ok(adService.getAd(id));
     }
 
+    @Operation(summary = "Получение картинки объявления", operationId = "getImage", tags = "Объявления")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)),
+            @ApiResponse(responseCode = "404", description = "Not found")
+    })
+    @GetMapping(value = "/{id}/image")
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
+        StoredImage image = adService.getImage(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(image.getMediaType()))
+                .body(image.getContent());
+    }
+
     @Operation(summary = "Удаление объявления", operationId = "removeAd", tags = "Объявления")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "No Content"),
@@ -88,7 +102,8 @@ public class AdController {
             @ApiResponse(responseCode = "404", description = "Not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeAd(@PathVariable Integer id) {
+    public ResponseEntity<Void> removeAd(@PathVariable Integer id, Authentication authentication) {
+        adService.deleteAd(authentication.getName(), id);
         return ResponseEntity.noContent().build();
     }
 
@@ -103,8 +118,9 @@ public class AdController {
     public ResponseEntity<Ad> updateAds(@PathVariable Integer id,
                                         @io.swagger.v3.oas.annotations.parameters.RequestBody(
                                                 content = @Content(schema = @Schema(implementation = CreateOrUpdateAd.class)))
-                                        @Valid @RequestBody CreateOrUpdateAd ad) {
-        return ResponseEntity.ok(new Ad());
+                                        @Valid @RequestBody CreateOrUpdateAd ad,
+                                        Authentication authentication) {
+        return ResponseEntity.ok(adService.updateAd(authentication.getName(), id, ad));
     }
 
     @Operation(summary = "Обновление картинки объявления", operationId = "updateImage", tags = "Объявления")
@@ -117,7 +133,11 @@ public class AdController {
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> updateImage(@PathVariable Integer id,
-                                              @RequestPart("image") MultipartFile image) {
-        return ResponseEntity.ok(new byte[0]);
+                                              @RequestPart("image") MultipartFile image,
+                                              Authentication authentication) {
+        StoredImage updatedImage = adService.updateImage(authentication.getName(), id, image);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(updatedImage.getMediaType()))
+                .body(updatedImage.getContent());
     }
 }

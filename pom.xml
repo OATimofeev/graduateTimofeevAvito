@@ -20,6 +20,7 @@
 
   <properties>
     <java.version>11</java.version>
+    <lombok.version>1.18.34</lombok.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
   </properties>
 
@@ -69,6 +70,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>

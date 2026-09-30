@@ -15,4 +15,12 @@ public interface AdService {
     Ads getCurrentUserAds(String username);
 
     ExtendedAd getAd(Integer id);
+
+    Ad updateAd(String username, Integer id, CreateOrUpdateAd ad);
+
+    void deleteAd(String username, Integer id);
+
+    StoredImage getImage(Integer id);
+
+    StoredImage updateImage(String username, Integer id, MultipartFile image);
 }
