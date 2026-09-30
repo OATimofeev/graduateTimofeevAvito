@@ -44,3 +44,13 @@ CREATE TABLE comments
     CONSTRAINT comments_author_id_fk FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT comments_text_length_check CHECK (LENGTH(text) BETWEEN 8 AND 64)
 );
+
+--changeset OATimofeev:004-insert-default-admin
+INSERT INTO users (email, password, first_name, last_name, phone, role, image)
+VALUES ('admin@gmail.com',
+        '$2a$10$.sikT5j7p5c6mt/qWwBCGOfIoVKczplSp27ZuGZDxl7Zf1BEqMz7u',
+        'Admin',
+        'Adminov',
+        '+7 999 999-99-99',
+        'ADMIN',
+        NULL);
