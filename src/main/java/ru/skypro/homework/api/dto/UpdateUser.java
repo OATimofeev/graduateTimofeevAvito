@@ -10,12 +10,12 @@ import javax.validation.constraints.Size;
 @Schema(description = "Данные для обновления пользователя")
 public class UpdateUser {
 
-    @Schema(description = "имя пользователя", minLength = 3, maxLength = 10)
-    @Size(min = 3, max = 10)
+    @Schema(description = "имя пользователя", minLength = 2, maxLength = 16)
+    @Size(min = 2, max = 16)
     private String firstName;
 
-    @Schema(description = "фамилия пользователя", minLength = 3, maxLength = 10)
-    @Size(min = 3, max = 10)
+    @Schema(description = "фамилия пользователя", minLength = 2, maxLength = 16)
+    @Size(min = 2, max = 16)
     private String lastName;
 
     @Schema(description = "телефон пользователя", pattern = "\\+7\\s?\\(?\\d{3}\\)?\\s?\\d{3}-?\\d{2}-?\\d{2}")
